@@ -1,0 +1,12 @@
+[user]
+	name = Kyle Walker
+	email = KyleJamesWalker@gmail.com
+
+[push]
+	default = simple
+[diff]
+	tool = bc3
+[difftool]
+	prompt = false
+[merge]
+	tool = bc3
