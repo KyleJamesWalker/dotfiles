@@ -1,28 +1,33 @@
-" URL: http://vim.wikia.com/wiki/Example_vimrc
-" Authors: http://vim.wikia.com/wiki/Vim_on_Freenode
-" Description: A minimal, but feature rich, example .vimrc. If you are a
-"              newbie, basing your first .vimrc on this file is a good choice.
-"              If you're a more advanced user, building your own .vimrc based
-"              on this file is still a good idea.
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
-"------------------------------------------------------------
-" Features {{{1
-"
-" These options and commands enable some very useful features in Vim, that
-" no user should have to live without.
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-" Set 'nocompatible' to ward off unexpected things that your distro might
-" have made, as well as sanely reset options when re-sourcing .vimrc
-set nocompatible
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'L9'
+Plugin 'git://git.wincent.com/command-t.git'
+Plugin 'scrooloose/syntastic'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'nvie/vim-flake8'
+Plugin 'zenorocha/dracula-theme'
+Plugin 'csv.vim'
+Plugin 'The-NERD-tree'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
 
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
 " and for plugins that are filetype specific.
-filetype indent plugin on
+"""filetype indent plugin on
 
 " Enable syntax highlighting
 syntax on
-
 
 "------------------------------------------------------------
 " Must have options {{{1
@@ -137,12 +142,6 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 
-" Indentation settings for using hard tabs for indent. Display tabs as
-" two characters wide.
-"set shiftwidth=2
-"set tabstop=2
-
-
 "------------------------------------------------------------
 " Mappings {{{1
 "
@@ -158,3 +157,30 @@ nnoremap <C-L> :nohl<CR><C-L>
 
 
 "------------------------------------------------------------
+" Powerline Config
+set rtp+=/Users/kyle/Library/Python/2.7/lib/python/site-packages/powerline/bindings/vim
+set laststatus=2
+set t_Co=256
+
+"------------------------------------------------------------
+set colorcolumn=80
+set background=dark
+
+"------------------------------------------------------------
+" Protect large files from sourcing and other overhead.
+" Files become read only
+if !exists("my_auto_commands_loaded")
+  let my_auto_commands_loaded = 1
+  " Large files are > 250MB
+  " Set options:
+  " eventignore+=FileType (no syntax highlighting etc
+  " assumes FileType always on)
+  " noswapfile (save copy of file)
+  " bufhidden=unload (save memory when other file is viewed)
+  " buftype=nowritefile (is read-only)
+  " undolevels=-1 (no undo possible)
+  let g:LargeFile = 1024 * 1024 * 250
+  augroup LargeFile
+    autocmd BufReadPre * let f=expand("<afile>") | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload buftype=nowrite undolevels=-1 | else | set eventignore-=FileType | endif
+    augroup END
+  endif
