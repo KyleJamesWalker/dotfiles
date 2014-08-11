@@ -1,4 +1,1 @@
-dotfiles
-========
-
-Simple Config Files
+My configuration files.
