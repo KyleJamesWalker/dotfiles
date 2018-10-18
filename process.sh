@@ -53,6 +53,7 @@ fi
 # Copy Configs
 cp .gitconfig ~
 cp .psqlrc ~
+git config --global core.hooksPath ~/githooks
 cp -r githooks ~/
 
 # Allow Key repeating in all apps
