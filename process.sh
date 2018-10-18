@@ -92,3 +92,9 @@ code --install-extension shd101wyy.markdown-preview-enhanced
 code --install-extension streetsidesoftware.code-spell-checker
 code --install-extension vscodevim.vim
 code --install-extension waderyan.gitblame
+
+# Install and pair Krypton
+curl https://krypt.co/kr | sh
+kr pair
+kr github
+kr codesign
