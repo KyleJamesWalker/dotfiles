@@ -36,6 +36,6 @@ jq '.credsStore = "adfs-ecr-login"' ~/.docker/config.json > "$tmp" && mv "$tmp" 
 echo "Resulting Configuration"
 cat ~/.docker/config.json | jq
 
-PYENV_VERSION=genv pip install -U awscli aws-adfs zkms
+PYENV_VERSION=genv pip install -U awscli aws-adfs
 
 cp docker-credential-adfs-ecr-login /usr/local/bin/docker-credential-adfs-ecr-login
