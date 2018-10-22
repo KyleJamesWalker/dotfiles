@@ -27,15 +27,13 @@ else
     echo "docker-credential-ecr-login already installed helper"
 fi
 
-
 echo "Updating Docker Configuration"
 tmp=$(mktemp)
-jq '.auths = {"'$AWS_ECR'": {}}' ~/.docker/config.json > "$tmp" && mv "$tmp" ~/.docker/config.json
-jq '.credHelpers = {"'$AWS_ECR'": "adfs-ecr-login"}' ~/.docker/config.json > "$tmp" && mv "$tmp" ~/.docker/config.json
+jq '.auths = {"'$AWS_ECR'": {}, "https://index.docker.io/v1/": {}}' ~/.docker/config.json > "$tmp" && mv "$tmp" ~/.docker/config.json
+jq '.credHelpers = {"'$AWS_ECR'": "adfs-ecr-login", "https://index.docker.io/v1/": "osxkeychain"}' ~/.docker/config.json > "$tmp" && mv "$tmp" ~/.docker/config.json
 jq '.credsStore = "adfs-ecr-login"' ~/.docker/config.json > "$tmp" && mv "$tmp" ~/.docker/config.json
 echo "Resulting Configuration"
 cat ~/.docker/config.json | jq
 
 PYENV_VERSION=genv pip install -U awscli aws-adfs
-
 cp docker-credential-adfs-ecr-login /usr/local/bin/docker-credential-adfs-ecr-login
