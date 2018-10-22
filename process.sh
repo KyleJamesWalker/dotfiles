@@ -27,6 +27,26 @@ if [ ! -d ~/.oh-my-zsh ]; then
 	echo Installing Oh My ZSH!
 	sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 	touch ~/.zshrc-creds
+	cat <<EOT >> ~/.zshrc-creds
+# Example Credentials
+# export GITHUB_ACCESS_TOKEN=
+
+# export TWINE_REPOSITORY_URL=
+# export TWINE_USERNAME=
+# export TWINE_PASSWORD=
+# export ARTIFACTORY_EMAIL=
+# export ARTIFACTORY_USERNAME=
+# export ARTIFACTORY_PASSWORD=
+# export ARTIFACTORY_AUTH=
+# export PIP_INDEX_URL=
+
+# export ACCTS_USER=
+# export ACCTS_PSWD=
+
+# export AWS_ECR=
+# export SSO_USER=
+# export SSO_PASS=
+EOT
 	cp .zshrc ~
 else
 	echo Oh My ZSH! Already Installed
