@@ -9,16 +9,8 @@ if [[ -z "$AWS_ECR" ]]; then
     exit 1
 fi
 
-if [[ -z "$SSO_USER" ]]; then
-    echo "Must provide SSO_USER in environment, add to ~/.zshrc-creds and source" 1>&2
-    exit 1
-fi
-
-if [[ -z "$SSO_PASS" ]]; then
-    echo "Must provide SSO_PASS in environment, add to ~/.zshrc-creds and source" 1>&2
-    exit 1
-fi
-
+echo "Enter your sso password for the OSX Keychain"
+security add-generic-password -a ${USER} -s sso -w
 
 if ! type "docker-credential-ecr-login" > /dev/null; then
     echo "Installing docker-credential-ecr-login helper"
