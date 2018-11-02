@@ -19,7 +19,7 @@ fi
 # Install some base tools
 brew doctor
 brew update
-brew install wget vim python thefuck git jq tmux asciinema tree
+brew install wget vim python thefuck git jq tmux asciinema tree jfrog-cli-go
 pip3 install --upgrade pip setuptools wheel
 
 # Install Oh My ZSH!
