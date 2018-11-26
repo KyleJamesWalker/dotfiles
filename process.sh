@@ -65,7 +65,7 @@ for i in "${CASKS[@]}"; do
 	echo brew cask install $i
 done
 
-brew install swagger-codegen
+brew install swagger-codegen gradle
 
 # Install vscode extensions (get the list from the following commands)
 # code --list-extensions | xargs -L 1 echo code --install-extension
