@@ -59,11 +59,13 @@ cp -r githooks ~/
 # Allow Key repeating in all apps
 defaults write -g ApplePressAndHoldEnabled -bool false
 
-CASKS=(boostnote iterm2 visual-studio-code beyond-compare path-finder caffeine docker droplr keybase homebrew/cask-fonts/font-hack)
+CASKS=(boostnote iterm2 visual-studio-code beyond-compare path-finder caffeine docker droplr keybase homebrew/cask-fonts/font-hack homebrew/cask-versions/java8)
 for i in "${CASKS[@]}"; do
 	echo Installing $i cask
 	echo brew cask install $i
 done
+
+brew install swagger-codegen
 
 # Install vscode extensions (get the list from the following commands)
 # code --list-extensions | xargs -L 1 echo code --install-extension
