@@ -19,7 +19,7 @@ fi
 # Install some base tools
 brew doctor
 brew update
-brew install wget vim python thefuck git jq tmux asciinema tree jfrog-cli-go terragrunt terraform npm
+brew install wget vim python thefuck git jq tmux asciinema tree jfrog-cli-go terragrunt terraform npm aws-okta
 pip3 install --upgrade pip setuptools wheel
 
 # Install Oh My ZSH!
@@ -55,6 +55,8 @@ cp .gitconfig ~
 cp .psqlrc ~
 git config --global core.hooksPath ~/githooks
 cp -r githooks ~/
+# Copy small helper scripts
+cp -r bin ~/
 
 # Allow Key repeating in all apps
 defaults write -g ApplePressAndHoldEnabled -bool false
