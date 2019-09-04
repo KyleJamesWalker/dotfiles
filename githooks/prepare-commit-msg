@@ -1,0 +1,6 @@
+#!/bin/bash
+LAST_COMMIT_MSG=~/.git-last-commit-msg
+
+if [ -f "$LAST_COMMIT_MSG" ]; then
+sed '/#/!s/^/# /' $LAST_COMMIT_MSG > $1
+fi

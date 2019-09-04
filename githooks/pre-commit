@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [[ -f "setup.py" || -f "requirements.txt" ]]; then
+    flake8
+else
+    # Unlikely a python project
+    EXIT_CODE=0
+fi
+
+EXIT_CODE=$?
+
+if [ $EXIT_CODE = 1 ]; then
+    read -p "You're about to commit with a flake error, continue? [y|n] " -n 1 -r < /dev/tty
+    echo
+    if echo $REPLY | grep -E '^[Yy]$' > /dev/null
+    then
+        exit 0 # push will execute
+    fi
+    exit 1 # push will not execute
+elif [ $EXIT_CODE = 127 ]; then
+    read -p "You're about to commit with without flake8 found, continue? [y|n] " -n 1 -r < /dev/tty
+    echo
+    if echo $REPLY | grep -E '^[Yy]$' > /dev/null
+    then
+        exit 0 # push will execute
+    fi
+    exit 1 # push will not execute
+else
+    exit 0 # push will execute
+fi

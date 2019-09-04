@@ -1,0 +1,4 @@
+#!/bin/bash
+LAST_COMMIT_MSG=~/.git-last-commit-msg
+
+cat $1 > $LAST_COMMIT_MSG
