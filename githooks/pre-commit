@@ -1,6 +1,8 @@
 #!/bin/bash
 
-if [[ -f "setup.py" || -f "requirements.txt" ]]; then
+if [[ -f "pyproject.toml" ]]; then
+    black --check .
+elif [[ -f "setup.py" || -f "requirements.txt" ]]; then
     flake8
 else
     # Unlikely a python project
