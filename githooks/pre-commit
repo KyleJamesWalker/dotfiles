@@ -1,18 +1,27 @@
 #!/bin/bash
 
+EXITS=()
 if [[ -f "pyproject.toml" ]]; then
-    black --check . ||  flake8
+    black --check .
+    EXITS+=($?)
+
+    flake8
+    EXITS+=($?)
 elif [[ -f "setup.py" || -f "requirements.txt" ]]; then
     flake8
+    EXITS+=($?)
 else
     # Unlikely a python project
-    EXIT_CODE=0
+    EXITS+=(0)
 fi
 
-EXIT_CODE=$?
+# Set array expansion integer seperator to line breaks
+IFS=$'\n'
+# Get the largest exit code
+EXIT_CODE=`echo "${EXITS[*]}" | sort -nr | head -n1`
 
 if [ $EXIT_CODE = 1 ]; then
-    read -p "You're about to commit with a flake error, continue? [y|n] " -n 1 -r < /dev/tty
+    read -p "You're about to commit with a linter error, continue? [y|n] " -n 1 -r < /dev/tty
     echo
     if echo $REPLY | grep -E '^[Yy]$' > /dev/null
     then
@@ -20,7 +29,7 @@ if [ $EXIT_CODE = 1 ]; then
     fi
     exit 1 # push will not execute
 elif [ $EXIT_CODE = 127 ]; then
-    read -p "You're about to commit with without flake8 found, continue? [y|n] " -n 1 -r < /dev/tty
+    read -p "You're about to commit with without linter(s) found, continue? [y|n] " -n 1 -r < /dev/tty
     echo
     if echo $REPLY | grep -E '^[Yy]$' > /dev/null
     then
