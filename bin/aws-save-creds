@@ -8,22 +8,23 @@ from configparser import ConfigParser
 
 def main():
     cfg = ConfigParser()
-    creds_filename = os.path.expanduser('~/.aws/credentials')
+    creds_filename = os.path.expanduser("~/.aws/credentials")
 
     if os.path.isfile(creds_filename):
         cfg.read(creds_filename)
-    try:
-        cfg['default'] = {
-            'aws_access_key_id': os.environ['AWS_ACCESS_KEY_ID'],
-            'aws_secret_access_key': os.environ['AWS_SECRET_ACCESS_KEY'],
-            'aws_session_token': os.environ['AWS_SESSION_TOKEN'],
-            'aws_security_token': os.environ['AWS_SECURITY_TOKEN'],
-        }
-    except KeyError as e:
-        print("Error not all environment variables set:", e)
-        sys.exit(-1)
 
-    with open(creds_filename, 'w') as fn:
+    cfg["default"] = {
+        key: val
+        for key, val in {
+            "aws_access_key_id": os.getenv("AWS_ACCESS_KEY_ID"),
+            "aws_secret_access_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
+            "aws_session_token": os.getenv("AWS_SESSION_TOKEN"),
+            "aws_security_token": os.getenv("AWS_SECURITY_TOKEN"),
+        }.items()
+        if val
+    }
+
+    with open(creds_filename, "w") as fn:
         cfg.write(fn)
 
 
