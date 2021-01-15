@@ -61,13 +61,10 @@ cp -r bin ~/
 # Allow Key repeating in all apps
 defaults write -g ApplePressAndHoldEnabled -bool false
 
-brew tap caskroom/versions
+brew tap homebrew/cask-versions
 
-CASKS=(boostnote iterm2 visual-studio-code beyond-compare path-finder caffeine docker droplr keybase homebrew/cask-fonts/font-hack caskroom/versions/java8 dbeaver-community)
-for i in "${CASKS[@]}"; do
-	echo Installing $i cask
-	echo brew cask install $i
-done
+# Removed: boostnote path-finder keybase caskroom/versions/java8
+brew install --cask iterm2 visual-studio-code beyond-compare caffeine docker droplr homebrew/cask-fonts/font-hack dbeaver-community
 
 brew install swagger-codegen gradle
 
@@ -99,8 +96,12 @@ code --install-extension streetsidesoftware.code-spell-checker
 code --install-extension vscodevim.vim
 code --install-extension waderyan.gitblame
 
-# Install and pair Krypton
-curl https://krypt.co/kr | sh
-kr pair
-kr github
-kr codesign
+if ! which kr > /dev/null ; then
+	# Install and pair Krypton
+	curl https://krypt.co/kr | sh
+	kr pair
+	kr github
+	kr codesign
+else
+	echo pyenv Already Installed
+fi
