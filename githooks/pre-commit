@@ -1,17 +1,8 @@
 #!/bin/bash
-
-# start templated
-INSTALL_PYTHON=/Users/kyle.walker/.pyenv/versions/3.10.4/envs/genv/bin/python3.10
-ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit)
-# end templated
-
-HERE="$(cd "$(dirname "$0")" && pwd)"
-ARGS+=(--hook-dir "$HERE" -- "$@")
-
-if [ -x "$INSTALL_PYTHON" ]; then
-    exec "$INSTALL_PYTHON" -mpre_commit "${ARGS[@]}"
-elif command -v pre-commit > /dev/null; then
-    exec pre-commit "${ARGS[@]}"
+if PYENV_VERSION=genv command -v pre-commit > /dev/null; then
+    HERE="$(cd "$(dirname "$0")" && pwd)"
+    ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit --hook-dir "$HERE" -- "$@")
+    PYENV_VERSION=genv exec pre-commit "${ARGS[@]}"
 else
     EXITS=()
     if [[ -f "pyproject.toml" ]]; then
