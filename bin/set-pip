@@ -9,7 +9,7 @@ if [[ "$REPO_LIST" == *"$CUR_REPO"* ]]; then
   echo "Note: Repo already has PIP_INDEX_URL access"
 else
   echo "Adding PIP_INDEX_URL to " $CUR_REPO
-  REPO_LIST="${REPO_LIST},${CUR_REPO}}"
+  REPO_LIST="${REPO_LIST},${CUR_REPO}"
 fi
 
 echo $PIP_INDEX_URL | gh secret set PIP_INDEX_URL --user -r $REPO_LIST
