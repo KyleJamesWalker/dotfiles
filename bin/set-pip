@@ -1,0 +1,17 @@
+#!/bin/bash
+
+CUR_REPO=`gh repo view --json nameWithOwner -q ".nameWithOwner"`
+echo "Checking if PIP_INDEX_URL is set on " $CUR_REPO
+
+REPO_LIST=`gh api /user/codespaces/secrets/PIP_INDEX_URL/repositories | jq -r '.repositories | map(.full_name) | join(",")'`
+
+if [[ "$REPO_LIST" == *"$CUR_REPO"* ]]; then
+  echo "Note: Repo already has PIP_INDEX_URL access"
+else
+  echo "Adding PIP_INDEX_URL to " $CUR_REPO
+  REPO_LIST="${REPO_LIST},${CUR_REPO}}"
+fi
+
+echo $PIP_INDEX_URL | gh secret set PIP_INDEX_URL --user -r $REPO_LIST
+
+echo "The following repos should have access to your PIP_INDEX_URL " $REPO_LIST
