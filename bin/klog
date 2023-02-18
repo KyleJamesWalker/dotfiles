@@ -1,0 +1,94 @@
+#!/usr/bin/env -S PYENV_VERSION=genv python
+"""Output pretty k8s logs.
+
+Requirements:
+  prompt_toolkit
+  rich
+  yaml
+
+"""
+import re
+import subprocess
+import yaml
+
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.shortcuts import CompleteStyle, prompt
+from rich.console import Console
+from rich.panel import Panel
+from rich.tree import Tree
+
+console = Console()
+_FIND_UNDER_WORD_RE = re.compile(r"([a-zA-Z0-9\-_]+|[^a-zA-Z0-9\-_\s]+)")
+
+
+def get_namespace_completer():
+    """Get all namespaces."""
+    namespaces_yaml = subprocess.run(
+        ["kubectl", "get", "namespaces", "-o", "yaml"], stdout=subprocess.PIPE
+    )
+
+    namespaces = set(
+        x["metadata"]["name"] for x in yaml.safe_load(namespaces_yaml.stdout)["items"]
+    )
+
+    return WordCompleter(
+        namespaces, ignore_case=True, match_middle=True, pattern=_FIND_UNDER_WORD_RE
+    )
+
+
+def get_app_completer(namespace):
+    """Get all app names."""
+    namespaces_yaml = subprocess.run(
+        ["kubectl", "get", "pods", "-n", namespace, "-o", "yaml"],
+        stdout=subprocess.PIPE,
+    )
+
+    namespaces = set(
+        x["metadata"]["labels"]["app"]
+        for x in yaml.safe_load(namespaces_yaml.stdout)["items"]
+    )
+
+    return WordCompleter(
+        namespaces, ignore_case=True, match_middle=True, pattern=_FIND_UNDER_WORD_RE
+    )
+
+
+def main():
+    """Entrypoint."""
+    console.print(
+        Panel(
+            "[magenta] :scroll: [bold]Pretty[/bold] Kubernetes Logging! :scroll: ",
+            title="K8s Logs Tool",
+            expand=False,
+        )
+    )
+
+    namespace = prompt(
+        "namespace: ",
+        completer=get_namespace_completer(),
+        complete_style=CompleteStyle.MULTI_COLUMN,
+    )
+
+    app_name = prompt(
+        "app-name: ",
+        completer=get_app_completer(namespace=namespace),
+        complete_style=CompleteStyle.MULTI_COLUMN,
+    )
+
+    overview = Tree("Logging")
+    overview.add(
+        f"[red][bold]Namespace:[/bold] {namespace}"
+    ).add(f"[green][bold]App Name:[/bold] {app_name}")
+    console.print(overview)
+
+    try:
+        subprocess.run(
+            f"kubectl logs -f -n {namespace} -l app={app_name} | jq -R -r '. as $line | try fromjson catch $line'",  # noqa: E501
+            shell=True,
+        )
+    except KeyboardInterrupt:
+        print("Exiting")
+
+
+if __name__ == "__main__":
+    main()
