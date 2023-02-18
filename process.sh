@@ -68,11 +68,12 @@ cp -r bin ~/
 defaults write -g ApplePressAndHoldEnabled -bool false
 
 brew tap homebrew/cask-versions
+brew tap asicsdigital/strongdm
 
 # Install some standard tools
-brew install --cask iterm2 visual-studio-code beyond-compare caffeine droplr homebrew/cask-fonts/font-hack dbeaver-community
+brew install --cask iterm2 visual-studio-code beyond-compare caffeine droplr homebrew/cask-fonts/font-hack dbeaver-community strongdm
 
-brew install swagger-codegen gradle
+brew install swagger-codegen gradle pcre2
 
 if ! which kr > /dev/null ; then
 	# Install and pair Krypton (hack to install on latest version of OSX)
