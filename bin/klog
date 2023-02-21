@@ -80,6 +80,8 @@ def main():
         f"[red][bold]Namespace:[/bold] {namespace}"
     ).add(f"[green][bold]App Name:[/bold] {app_name}")
     console.print(overview)
+    # Set terminal title
+    print(f"\x1b]2;klog {namespace}:{app_name}\x07")
 
     try:
         subprocess.run(
