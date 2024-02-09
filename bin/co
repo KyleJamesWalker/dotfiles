@@ -1,0 +1,4 @@
+
+#!/bin/bash
+
+git shortlog -s -n -e | cut -f2 | awk '{print "Co-authored-by: "$0}'
