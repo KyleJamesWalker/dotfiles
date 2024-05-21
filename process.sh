@@ -13,8 +13,6 @@ fi
 if ! which brew > /dev/null ; then
 	echo Installing HomeBrew
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/kyle.walker/.zprofile
-	eval "$(/opt/homebrew/bin/brew shellenv)"
 else
 	echo Homebrew Already installed
 fi
@@ -44,7 +42,9 @@ if ! which pyenv > /dev/null ; then
 	pyenv install 3.8.13
 	pyenv install 3.9.13
 	pyenv install 3.10.4
-	pyenv virtualenv 3.10.4 genv
+	pyenv install 3.11.9
+	pyenv install 3.12.2
+	pyenv virtualenv 3.12.2 genv
 	pyenv global genv
 else
 	echo pyenv Already Installed
@@ -75,12 +75,3 @@ brew install --cask iterm2 visual-studio-code beyond-compare caffeine droplr hom
 
 brew install swagger-codegen gradle pcre2
 
-if ! which kr > /dev/null ; then
-	# Install and pair Krypton (hack to install on latest version of OSX)
-	curl https://krypt.co/kr | sed "s/11.0/12.2/g" | sh
-	kr pair
-	kr github
-	kr codesign
-else
-	echo kr Already Installed
-fi
