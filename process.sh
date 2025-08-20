@@ -38,18 +38,19 @@ else
   echo Oh My ZSH! Already Installed
 fi
 
-if ! which pyenv > /dev/null ; then
+if ! which uv > /dev/null ; then
   echo Installing pyenv
-  brew install pyenv pyenv-virtualenv
-  pyenv install 3.8.13
-  pyenv install 3.9.13
-  pyenv install 3.10.4
-  pyenv install 3.11.9
-  pyenv install 3.12.2
-  pyenv virtualenv 3.12.2 genv
-  pyenv global genv
+  brew install uv
+  uv python install 3.10
+  uv python install 3.11
+  uv python install 3.12
+
+  # Create global tools environment, and install a few helpers
+  mkdir -p ~/.uv/genv
+  cd ~/.uv/genv; uv init --python 3.12 --bare; cd -
+  cd ~/.uv/genv; uv add httpie zauthz aws2-wrap black flake8 pre-commit; cd -
 else
-  echo pyenv Already Installed
+  echo uv Already Installed
 fi
 
 # Install vundle
@@ -76,4 +77,3 @@ brew tap asicsdigital/strongdm
 brew install --cask iterm2 visual-studio-code beyond-compare caffeine droplr homebrew/cask-fonts/font-hack dbeaver-community strongdm
 
 brew install swagger-codegen gradle pcre2
-

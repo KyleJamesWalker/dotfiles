@@ -1,4 +1,5 @@
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+# Add path for personal bin and global tools virtual environment
+export PATH=$HOME/bin:$HOME/.uv/genv/.venv/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -14,7 +15,6 @@ plugins=(
   history
   history-substring-search
   docker
-  pyenv
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -24,7 +24,5 @@ export EDITOR=vim
 source ~/.zshrc-creds
 
 eval "$(thefuck --alias f)"
-
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 export GPG_TTY=$(tty)
