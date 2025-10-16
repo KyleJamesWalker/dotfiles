@@ -1,8 +1,29 @@
 #!/bin/bash
-if PYENV_VERSION=genv command -v pre-commit > /dev/null; then
+set -u
+
+# Find project root (prefer Git worktree root)
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+if [ -z "${ROOT}" ]; then
+  # Fallback: walk up from CWD looking for the config
+  SEARCH_DIR="$PWD"
+  while :; do
+    if [ -f "$SEARCH_DIR/.pre-commit-config.yaml" ]; then
+      ROOT="$SEARCH_DIR"
+      break
+    fi
+    [ "$SEARCH_DIR" = "/" ] && break
+    SEARCH_DIR="$(dirname "$SEARCH_DIR")"
+  done
+fi
+
+if [ -n "${ROOT:-}" ] && [ -f "$ROOT/.pre-commit-config.yaml" ]; then
     HERE="$(cd "$(dirname "$0")" && pwd)"
-    ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit --hook-dir "$HERE" -- "$@")
-    PYENV_VERSION=genv exec pre-commit "${ARGS[@]}"
+    ARGS=(hook-impl
+          --config="$ROOT/.pre-commit-config.yaml"
+          --hook-type=pre-commit
+          --hook-dir "$HERE"
+          -- "$@")
+    exec pre-commit "${ARGS[@]}"
 else
     EXITS=()
     if [[ -f "pyproject.toml" ]]; then
@@ -19,29 +40,26 @@ else
         EXITS+=(0)
     fi
 
-    # Set array expansion integer seperator to line breaks
+    # Set array expansion integer separator to line breaks
     IFS=$'\n'
     # Get the largest exit code
-    EXIT_CODE=`echo "${EXITS[*]}" | sort -nr | head -n1`
+    EXIT_CODE=$(echo "${EXITS[*]}" | sort -nr | head -n1)
 
-    if [ $EXIT_CODE = 1 ]; then
+    if [ "$EXIT_CODE" -eq 1 ]; then
         read -p "You're about to commit with a linter error, continue? [y|n] " -n 1 -r < /dev/tty
         echo
-        if echo $REPLY | grep -E '^[Yy]$' > /dev/null
-        then
-            exit 0 # push will execute
+        if echo "$REPLY" | grep -E '^[Yy]$' > /dev/null; then
+            exit 0
         fi
-        exit 1 # push will not execute
-    elif [ $EXIT_CODE = 127 ]; then
-        read -p "You're about to commit with without linter(s) found, continue? [y|n] " -n 1 -r < /dev/tty
+        exit 1
+    elif [ "$EXIT_CODE" -eq 127 ]; then
+        read -p "You're about to commit without linter(s) found, continue? [y|n] " -n 1 -r < /dev/tty
         echo
-        if echo $REPLY | grep -E '^[Yy]$' > /dev/null
-        then
-            exit 0 # push will execute
+        if echo "$REPLY" | grep -E '^[Yy]$' > /dev/null; then
+            exit 0
         fi
-        exit 1 # push will not execute
+        exit 1
     else
-        exit 0 # push will execute
+        exit 0
     fi
-
 fi

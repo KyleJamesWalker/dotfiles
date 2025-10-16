@@ -76,6 +76,7 @@ export ARTIFACTORY_USERNAME=`keychain-get ARTIFACTORY_USERNAME`
 export ARTIFACTORY_PASSWORD=`keychain-get ARTIFACTORY_PASSWORD`
 export ARTIFACTORY_AUTH=`keychain-get ARTIFACTORY_AUTH`
 export PIP_INDEX_URL=`keychain-get PIP_INDEX_URL`
+export UV_INDEX_URL=`keychain-get PIP_INDEX_URL`
 
 export ACCTS_USER=`keychain-get ACCTS_USER`
 export ACCTS_PSWD=`keychain-get ACCTS_PSWD`
