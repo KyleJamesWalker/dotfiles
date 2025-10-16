@@ -21,8 +21,9 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export EDITOR=vim
-source ~/.zshrc-creds
+export GPG_TTY=$(tty)
 
 eval "$(thefuck --alias f)"
 
-export GPG_TTY=$(tty)
+# Load personal credentials if the file exists
+[[ -f $HOME/.zshrc-creds ]] && source /Users/kyle.walker/.zshrc-creds
