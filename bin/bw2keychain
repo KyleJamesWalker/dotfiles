@@ -42,13 +42,15 @@ ensure_bw_session() {
     echo "Unlocking Bitwarden vault..."
     BW_SESSION="$(bw unlock --raw)"
     export BW_SESSION
-  else
+ else
     # Validate session
     if ! bw list items --search test >/dev/null 2>&1; then
       echo "Provided BW_SESSION seems invalid. Try unsetting it and rerun." >&2
       exit 1
     fi
   fi
+  # Always refresh local cache so we see the latest edits
+  bw sync >/dev/null
 }
 
 # Fetch the secure note content (the dotenv)
